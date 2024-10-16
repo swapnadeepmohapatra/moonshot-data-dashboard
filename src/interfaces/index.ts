@@ -10,7 +10,7 @@ export interface AnalyticsData {
   F: number;
 }
 
-export interface QueryParameters {
+export interface Filters {
   startDate?: string;
   endDate?: string;
   ageGroup?: string;
@@ -24,4 +24,9 @@ export interface TotalTimePerFeature {
   D: number;
   E: number;
   F: number;
+}
+
+export interface BarData {
+  feature: string;
+  time: number;
 }

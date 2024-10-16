@@ -1,15 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "../../../lib/db";
-import {
-  AnalyticsData,
-  QueryParameters,
-  TotalTimePerFeature,
-} from "@/interfaces";
+import { AnalyticsData, Filters, TotalTimePerFeature } from "@/interfaces";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
 
-  const queryParams: QueryParameters = {
+  const queryParams: Filters = {
     startDate: searchParams.get("startDate") || undefined,
     endDate: searchParams.get("endDate") || undefined,
     ageGroup: searchParams.get("ageGroup") || undefined,
