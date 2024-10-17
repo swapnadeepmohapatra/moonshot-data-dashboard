@@ -1,0 +1,54 @@
+.filterBar {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.filterButton {
+  padding: 0.5rem 1rem;
+  border: 0.0625rem solid #ccc;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  color: black;
+  border-radius: 0.25rem;
+}
+
+.filterDropdown {
+  padding: 0.5rem;
+  border: 0.0625rem solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+  color: black;
+  border-radius: 0.25rem;
+}
+
+.dialogOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.dialogContent {
+  background-color: #fff;
+  padding: 1.25rem;
+  border-radius: 0.5rem;
+  position: relative;
+}
+
+.closeButton {
+  position: absolute;
+  top: 0.625rem;
+  right: 0.625rem;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: red;
+}

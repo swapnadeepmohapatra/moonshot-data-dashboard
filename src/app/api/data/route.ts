@@ -16,8 +16,8 @@ export async function GET(req: NextRequest) {
 
   if (queryParams.startDate && queryParams.endDate) {
     query.day = {
-      $gte: new Date(queryParams.startDate),
-      $lte: new Date(queryParams.endDate),
+      $gte: new Date(parseInt(queryParams.startDate)),
+      $lte: new Date(parseInt(queryParams.endDate)),
     };
   }
 
@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
   }
 
   if (queryParams.gender && queryParams.gender !== "all") {
-    query.gender = queryParams.gender.toLowerCase();
+    query.gender = queryParams.gender;
   }
 
   try {

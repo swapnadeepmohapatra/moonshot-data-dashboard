@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "../../../lib/db";
 import { AnalyticsData } from "@/interfaces";
 
+const parseDate = (dateString: string): Date => {
+  const [day, month, year] = dateString.split("/").map(Number);
+  return new Date(year, month - 1, day);
+};
+
 export async function POST(req: NextRequest) {
   try {
     const data: AnalyticsData | AnalyticsData[] = await req.json();
@@ -29,11 +34,16 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    const recordsWithDate = records.map((record) => ({
+      ...record,
+      day: parseDate(record.day.toString()),
+    }));
+
     const client = await clientPromise;
     const db = client.db("rocket");
     const collection = db.collection("analytics");
 
-    const result = await collection.insertMany(records);
+    const result = await collection.insertMany(recordsWithDate);
 
     return NextResponse.json(
       { message: `${result.insertedCount} records inserted successfully` },
