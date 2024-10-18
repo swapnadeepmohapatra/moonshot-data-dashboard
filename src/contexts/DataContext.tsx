@@ -6,6 +6,7 @@ import React, {
   useState,
   ReactNode,
 } from "react";
+import Cookies from "js-cookie";
 
 interface DataContextType {
   barChartData: BarData[];
@@ -27,11 +28,31 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({
     endDate: "",
   });
 
+  useEffect(() => {
+    const savedFilters = Cookies.get("filters");
+
+    if (savedFilters) {
+      const parsedFilters: Filters = JSON.parse(savedFilters);
+      if (
+        parsedFilters.ageGroup ||
+        parsedFilters.gender ||
+        parsedFilters.startDate ||
+        parsedFilters.endDate
+      ) {
+        setFilters(parsedFilters);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    const filtersString = JSON.stringify(filters);
+    Cookies.set("filters", filtersString, { expires: 7 });
+  }, [filters]);
+
   const fetchData = async (currentFilters: Filters) => {
     const response = await fetch(
       `/api/data?startDate=${currentFilters.startDate}&endDate=${currentFilters.endDate}&ageGroup=${currentFilters.ageGroup}&gender=${currentFilters.gender}`
     );
-
     const data = await response.json();
 
     const totalTimePerFeature = data.totalTimePerFeature;
