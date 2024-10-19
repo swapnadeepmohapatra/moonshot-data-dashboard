@@ -30,3 +30,8 @@ export interface BarData {
   feature: string;
   time: number;
 }
+
+export interface LineData {
+  day: string;
+  value: number;
+}

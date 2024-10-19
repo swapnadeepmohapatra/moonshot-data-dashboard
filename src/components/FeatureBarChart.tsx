@@ -19,9 +19,13 @@ interface BarData {
 
 interface FeatureBarChartProps {
   data: BarData[];
+  selectFeature: (feature: string) => void;
 }
 
-const FeatureBarChart: React.FC<FeatureBarChartProps> = ({ data }) => (
+const FeatureBarChart: React.FC<FeatureBarChartProps> = ({
+  data,
+  selectFeature,
+}) => (
   <ResponsiveContainer width="100%" height={400}>
     <BarChart data={data} layout="vertical">
       <CartesianGrid strokeDasharray="3 3" />
@@ -36,6 +40,9 @@ const FeatureBarChart: React.FC<FeatureBarChartProps> = ({ data }) => (
         dataKey="time"
         fill="#8884d8"
         activeBar={<Rectangle fill="#D8B484" stroke="#8884d8" />}
+        onClick={(data) => {
+          selectFeature(data.feature);
+        }}
       >
         <LabelList dataKey="time" position="right" />
       </Bar>

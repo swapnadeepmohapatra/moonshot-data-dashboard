@@ -1,4 +1,4 @@
-import { BarData, Filters } from "@/interfaces";
+import { AnalyticsData, BarData, Filters, LineData } from "@/interfaces";
 import React, {
   createContext,
   useContext,
@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import Cookies from "js-cookie";
 import { useSearchParams } from "next/navigation";
+import { Feature } from "@/enums";
 
 interface DataContextType {
   barChartData: BarData[];
@@ -15,6 +16,9 @@ interface DataContextType {
   setFilters: React.Dispatch<React.SetStateAction<Filters>>;
   filters: Filters;
   getShareableLink: () => string;
+  selectedFeature: string | null;
+  selectFeature: (feature: string) => void;
+  lineChartData: LineData[];
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -31,6 +35,8 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({
   });
   const searchParams = useSearchParams();
   const [initializedFromQuery, setInitializedFromQuery] = useState(false);
+  const [selectedFeature, setSelectedFeature] = useState<string | null>(null);
+  const [completeData, setCompleteData] = useState<AnalyticsData[]>([]);
 
   const fetchData = async (currentFilters: Filters) => {
     const response = await fetch(
@@ -46,6 +52,8 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({
         time: Number(time),
       }))
     );
+
+    setCompleteData(data.data);
   };
 
   const parseFiltersFromQuery = (): Filters => {
@@ -128,9 +136,32 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({
     return `${window.location.origin}/?filter=${filterString}`;
   };
 
+  const selectFeature = (feature: string) => {
+    setSelectedFeature(feature);
+  };
+
+  const getSelectedFeatureData = () => {
+    if (selectedFeature) {
+      return completeData.map((data: AnalyticsData) => ({
+        day: new Date(data.day).toLocaleDateString(),
+        value: data[selectedFeature as Feature],
+      }));
+    }
+    return [];
+  };
+
   return (
     <DataContext.Provider
-      value={{ barChartData, fetchData, setFilters, filters, getShareableLink }}
+      value={{
+        barChartData,
+        fetchData,
+        setFilters,
+        filters,
+        getShareableLink,
+        selectedFeature,
+        selectFeature,
+        lineChartData: getSelectedFeatureData(),
+      }}
     >
       {children}
     </DataContext.Provider>

@@ -6,9 +6,11 @@ import { useDataContext } from "../contexts/DataContext";
 import Navbar from "@/components/Navbar";
 import { redirect, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import FeatureLineChart from "@/components/FeatureLineChart";
 
 export default function Home() {
-  const { barChartData } = useDataContext();
+  const { barChartData, selectFeature, lineChartData, selectedFeature } =
+    useDataContext();
 
   const searchParams = useSearchParams();
 
@@ -33,7 +35,9 @@ export default function Home() {
     <main>
       <Navbar />
       <FilterBar />
-      <FeatureBarChart data={barChartData} />
+      <FeatureBarChart data={barChartData} selectFeature={selectFeature} />
+      <p>Data for {selectedFeature}: </p>
+      <FeatureLineChart data={lineChartData} />
     </main>
   );
 }
