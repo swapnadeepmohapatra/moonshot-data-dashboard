@@ -2,7 +2,7 @@
 
 import { signIn } from "next-auth/react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import styles from "./styles.module.css";
 import Link from "next/link";
 
@@ -11,6 +11,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,7 +72,10 @@ export default function Login() {
       </form>
       <div className={styles.loginLink}>
         <p>
-          Do not have an account? <Link href="/auth/signup">Sign up</Link>
+          Do not have an account?{" "}
+          <Link href={`/auth/signup?redirect=${searchParams.get("redirect")}`}>
+            Sign up
+          </Link>
         </p>
       </div>
     </div>

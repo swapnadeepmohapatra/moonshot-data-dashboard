@@ -4,16 +4,29 @@ import FilterBar from "@/components/FilterBar";
 import FeatureBarChart from "../components/FeatureBarChart";
 import { useDataContext } from "../contexts/DataContext";
 import Navbar from "@/components/Navbar";
-import { redirect } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 
 export default function Home() {
   const { barChartData } = useDataContext();
 
-  const { data } = useSession();
+  const searchParams = useSearchParams();
 
-  if (!data?.user) {
-    redirect("/auth/signin");
+  const { status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      if (searchParams.get("filter")) {
+        return redirect(
+          `/auth/signin?redirect=/?filter=${searchParams.get("filter")}`
+        );
+      }
+
+      redirect("/auth/signin?redirect=/");
+    },
+  });
+
+  if (status === "loading") {
+    return "Loading...";
   }
 
   return (

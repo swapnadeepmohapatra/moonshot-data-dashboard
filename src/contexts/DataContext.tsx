@@ -48,21 +48,33 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({
     );
   };
 
-  useEffect(() => {
-    const queryFilters: Filters = {
-      ageGroup: searchParams.get("ageGroup")
-        ? String(searchParams.get("ageGroup"))
-        : "",
-      gender: searchParams.get("gender")
-        ? String(searchParams.get("gender"))
-        : "",
-      startDate: searchParams.get("startDate")
-        ? String(searchParams.get("startDate"))
-        : "",
-      endDate: searchParams.get("endDate")
-        ? String(searchParams.get("endDate"))
-        : "",
+  const parseFiltersFromQuery = (): Filters => {
+    const filterParam = searchParams.get("filter");
+    if (filterParam) {
+      try {
+        const parsedFilters: Filters = JSON.parse(
+          decodeURIComponent(filterParam)
+        );
+        return {
+          ageGroup: parsedFilters.ageGroup || "",
+          gender: parsedFilters.gender || "",
+          startDate: parsedFilters.startDate || "",
+          endDate: parsedFilters.endDate || "",
+        };
+      } catch (error) {
+        console.error("Failed to parse filters from query:", error);
+      }
+    }
+    return {
+      ageGroup: "",
+      gender: "",
+      startDate: "",
+      endDate: "",
     };
+  };
+
+  useEffect(() => {
+    const queryFilters = parseFiltersFromQuery();
 
     if (
       queryFilters.ageGroup ||
@@ -106,12 +118,14 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({
   }, [filters]);
 
   const getShareableLink = () => {
-    const searchParams = new URLSearchParams();
-    searchParams.set("ageGroup", filters.ageGroup || "");
-    searchParams.set("gender", filters.gender || "");
-    searchParams.set("startDate", filters.startDate || "");
-    searchParams.set("endDate", filters.endDate || "");
-    return `${window.location.origin}/?${searchParams.toString()}`;
+    const filterObject = {
+      ageGroup: filters.ageGroup || "",
+      gender: filters.gender || "",
+      startDate: filters.startDate || "",
+      endDate: filters.endDate || "",
+    };
+    const filterString = encodeURIComponent(JSON.stringify(filterObject));
+    return `${window.location.origin}/?filter=${filterString}`;
   };
 
   return (

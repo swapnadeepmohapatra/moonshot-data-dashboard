@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import styles from "./styles.module.css";
 
@@ -10,6 +10,7 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,7 +72,10 @@ export default function Signup() {
       </form>
       <div className={styles.loginLink}>
         <p>
-          Have an account? <Link href="/auth/signin">Log in</Link>
+          Have an account?{" "}
+          <Link href={`/auth/signin?redirect=${searchParams.get("redirect")}`}>
+            Log in
+          </Link>
         </p>
       </div>
     </div>
