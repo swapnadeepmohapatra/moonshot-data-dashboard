@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import styles from "./styles.module.css";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
@@ -31,32 +33,47 @@ export default function Signup() {
   };
 
   return (
-    <div>
-      <h1>Sign Up</h1>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Sign Up</h1>
       <form onSubmit={handleSignup}>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <div>
-          <label htmlFor="email">Email:</label>
+        {error && <p className={styles.error}>{error}</p>}
+        <div className={styles.formGroup}>
+          <label htmlFor="email" className={styles.label}>
+            Email:
+          </label>
           <input
             type="email"
             id="email"
+            className={styles.input}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            placeholder="Email"
           />
         </div>
-        <div>
-          <label htmlFor="password">Password:</label>
+        <div className={styles.formGroup}>
+          <label htmlFor="password" className={styles.label}>
+            Password:
+          </label>
           <input
             type="password"
             id="password"
+            className={styles.input}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            placeholder="Password"
           />
         </div>
-        <button type="submit">Sign Up</button>
+        <button type="submit" className={styles.button}>
+          Sign Up
+        </button>
       </form>
+      <div className={styles.loginLink}>
+        <p>
+          Have an account? <Link href="/auth/signin">Log in</Link>
+        </p>
+      </div>
     </div>
   );
 }
