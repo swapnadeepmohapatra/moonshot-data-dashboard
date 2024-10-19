@@ -7,6 +7,7 @@ import React, {
   ReactNode,
 } from "react";
 import Cookies from "js-cookie";
+import { useSearchParams } from "next/navigation";
 
 interface DataContextType {
   barChartData: BarData[];
@@ -27,27 +28,8 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({
     startDate: "",
     endDate: "",
   });
-
-  useEffect(() => {
-    const savedFilters = Cookies.get("filters");
-
-    if (savedFilters) {
-      const parsedFilters: Filters = JSON.parse(savedFilters);
-      if (
-        parsedFilters.ageGroup ||
-        parsedFilters.gender ||
-        parsedFilters.startDate ||
-        parsedFilters.endDate
-      ) {
-        setFilters(parsedFilters);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    const filtersString = JSON.stringify(filters);
-    Cookies.set("filters", filtersString, { expires: 7 });
-  }, [filters]);
+  const searchParams = useSearchParams();
+  const [initializedFromQuery, setInitializedFromQuery] = useState(false);
 
   const fetchData = async (currentFilters: Filters) => {
     const response = await fetch(
@@ -64,6 +46,59 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({
       }))
     );
   };
+
+  useEffect(() => {
+    const queryFilters: Filters = {
+      ageGroup: searchParams.get("ageGroup")
+        ? String(searchParams.get("ageGroup"))
+        : "",
+      gender: searchParams.get("gender")
+        ? String(searchParams.get("gender"))
+        : "",
+      startDate: searchParams.get("startDate")
+        ? String(searchParams.get("startDate"))
+        : "",
+      endDate: searchParams.get("endDate")
+        ? String(searchParams.get("endDate"))
+        : "",
+    };
+
+    if (
+      queryFilters.ageGroup ||
+      queryFilters.gender ||
+      queryFilters.startDate ||
+      queryFilters.endDate
+    ) {
+      setFilters(queryFilters);
+      setInitializedFromQuery(true);
+      setTimeout(() => {
+        fetchData(queryFilters);
+      }, 500);
+    } else {
+      const savedFilters = Cookies.get("filters");
+      if (savedFilters) {
+        const parsedFilters: Filters = JSON.parse(savedFilters);
+        if (
+          parsedFilters.ageGroup ||
+          parsedFilters.gender ||
+          parsedFilters.startDate ||
+          parsedFilters.endDate
+        ) {
+          setFilters(parsedFilters);
+          setTimeout(() => {
+            fetchData(parsedFilters);
+          }, 500);
+        }
+      }
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (!initializedFromQuery) {
+      const filtersString = JSON.stringify(filters);
+      Cookies.set("filters", filtersString, { expires: 7 });
+    }
+  }, [filters, initializedFromQuery]);
 
   useEffect(() => {
     fetchData(filters);

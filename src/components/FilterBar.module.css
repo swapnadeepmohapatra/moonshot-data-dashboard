@@ -4,6 +4,13 @@
   align-items: center;
 }
 
+.filterBarContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
 .filterButton {
   padding: 0.5rem 1rem;
   border: 0.0625rem solid #ccc;

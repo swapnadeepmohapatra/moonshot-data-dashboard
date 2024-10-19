@@ -37,51 +37,59 @@ function FilterBar() {
   };
 
   return (
-    <div className={styles.filterBar}>
-      <button className={styles.filterButton} onClick={openDateSelector}>
-        {filters.startDate && filters.endDate ? (
-          <>
-            {new Date(parseInt(filters.startDate)).toDateString()} -{" "}
-            {new Date(parseInt(filters.endDate)).toDateString()}
-          </>
-        ) : (
-          "Select Date"
-        )}
-      </button>
+    <div className={styles.filterBarContainer}>
+      <div className={styles.filterBar}>
+        <button className={styles.filterButton} onClick={openDateSelector}>
+          {filters.startDate && filters.endDate ? (
+            <>
+              {new Date(parseInt(filters.startDate)).toDateString()} -{" "}
+              {new Date(parseInt(filters.endDate)).toDateString()}
+            </>
+          ) : (
+            "Select Date"
+          )}
+        </button>
 
-      <select
-        className={styles.filterDropdown}
-        value={filters.ageGroup || ""}
-        onChange={handleAgeChange}
-      >
-        <option value="">Select Age</option>
-        <option value="15-25">15-25</option>
-        <option value=">25">{">"}25</option>
-      </select>
+        <select
+          className={styles.filterDropdown}
+          value={filters.ageGroup || ""}
+          onChange={handleAgeChange}
+        >
+          <option value="">Select Age</option>
+          <option value="15-25">15-25</option>
+          <option value=">25">{">"}25</option>
+        </select>
 
-      <select
-        className={styles.filterDropdown}
-        value={filters.gender || ""}
-        onChange={handleGenderChange}
-      >
-        <option value="">Select Gender</option>
-        <option value="Male">Male</option>
-        <option value="Female">Female</option>
-      </select>
+        <select
+          className={styles.filterDropdown}
+          value={filters.gender || ""}
+          onChange={handleGenderChange}
+        >
+          <option value="">Select Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
 
-      {isDateDialogOpen && (
-        <div className={styles.dialogOverlay}>
-          <div className={styles.dialogContent}>
-            <button className={styles.closeButton} onClick={closeDateSelector}>
-              X
-            </button>
-            <DateRangeSelector onDateChange={handleDateChange} />
+        {isDateDialogOpen && (
+          <div className={styles.dialogOverlay}>
+            <div className={styles.dialogContent}>
+              <button
+                className={styles.closeButton}
+                onClick={closeDateSelector}
+              >
+                X
+              </button>
+              <DateRangeSelector onDateChange={handleDateChange} />
+            </div>
           </div>
-        </div>
-      )}
-      <button className={styles.filterButton} onClick={handleClearFilters}>
-        Clear Filters
-      </button>
+        )}
+        <button className={styles.filterButton} onClick={handleClearFilters}>
+          Clear Filters
+        </button>
+      </div>
+      <div>
+        <button className={styles.filterButton}>Share</button>
+      </div>
     </div>
   );
 }

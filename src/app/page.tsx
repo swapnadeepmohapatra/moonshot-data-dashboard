@@ -8,10 +8,10 @@ export default function Home() {
   const { barChartData } = useDataContext();
 
   return (
-    <div>
+    <main>
       <h2>Feature Time Spent</h2>
       <FilterBar />
       <FeatureBarChart data={barChartData} />
-    </div>
+    </main>
   );
 }
