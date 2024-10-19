@@ -14,6 +14,7 @@ interface DataContextType {
   fetchData: (filters: Filters) => void;
   setFilters: React.Dispatch<React.SetStateAction<Filters>>;
   filters: Filters;
+  getShareableLink: () => string;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -104,9 +105,18 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({
     fetchData(filters);
   }, [filters]);
 
+  const getShareableLink = () => {
+    const searchParams = new URLSearchParams();
+    searchParams.set("ageGroup", filters.ageGroup || "");
+    searchParams.set("gender", filters.gender || "");
+    searchParams.set("startDate", filters.startDate || "");
+    searchParams.set("endDate", filters.endDate || "");
+    return `${window.location.origin}/?${searchParams.toString()}`;
+  };
+
   return (
     <DataContext.Provider
-      value={{ barChartData, fetchData, setFilters, filters }}
+      value={{ barChartData, fetchData, setFilters, filters, getShareableLink }}
     >
       {children}
     </DataContext.Provider>

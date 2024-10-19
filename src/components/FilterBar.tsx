@@ -4,7 +4,7 @@ import styles from "./FilterBar.module.css";
 import { useDataContext } from "@/contexts/DataContext";
 
 function FilterBar() {
-  const { setFilters, filters } = useDataContext();
+  const { setFilters, filters, getShareableLink } = useDataContext();
   const [isDateDialogOpen, setIsDateDialogOpen] = useState(false);
 
   const openDateSelector = () => {
@@ -33,6 +33,12 @@ function FilterBar() {
       endDate: "",
       ageGroup: "",
       gender: "",
+    });
+  };
+
+  const shareLink = () => {
+    navigator.clipboard.writeText(getShareableLink()).then(() => {
+      alert("Link copied to clipboard!");
     });
   };
 
@@ -88,7 +94,9 @@ function FilterBar() {
         </button>
       </div>
       <div>
-        <button className={styles.filterButton}>Share</button>
+        <button className={styles.filterButton} onClick={shareLink}>
+          Share
+        </button>
       </div>
     </div>
   );
