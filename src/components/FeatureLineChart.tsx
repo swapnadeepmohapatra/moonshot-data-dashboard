@@ -16,6 +16,10 @@ interface HighlightAndZoomLineChartProps {
   data: LineData[];
 }
 
+interface MouseEventWithClientX extends React.MouseEvent<HTMLDivElement> {
+  clientX: number;
+}
+
 const HighlightAndZoomLineChart: React.FC<HighlightAndZoomLineChartProps> = ({
   data,
 }) => {
@@ -24,7 +28,7 @@ const HighlightAndZoomLineChart: React.FC<HighlightAndZoomLineChartProps> = ({
   const [endX, setEndX] = useState<number | null>(null);
   const chartRef = useRef<HTMLDivElement>(null);
 
-  const handleMouseDown = (e: any) => {
+  const handleMouseDown = (e: MouseEventWithClientX) => {
     if (chartRef.current) {
       const chartPosition = chartRef.current.getBoundingClientRect();
       const xValue = e.clientX - chartPosition.left;
@@ -32,7 +36,7 @@ const HighlightAndZoomLineChart: React.FC<HighlightAndZoomLineChartProps> = ({
     }
   };
 
-  const handleMouseMove = (e: any) => {
+  const handleMouseMove = (e: MouseEventWithClientX) => {
     if (startX !== null && chartRef.current) {
       const chartPosition = chartRef.current.getBoundingClientRect();
       const xValue = e.clientX - chartPosition.left;

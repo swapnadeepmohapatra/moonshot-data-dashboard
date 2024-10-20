@@ -56,32 +56,32 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({
     setCompleteData(data.data);
   };
 
-  const parseFiltersFromQuery = (): Filters => {
-    const filterParam = searchParams.get("filter");
-    if (filterParam) {
-      try {
-        const parsedFilters: Filters = JSON.parse(
-          decodeURIComponent(filterParam)
-        );
-        return {
-          ageGroup: parsedFilters.ageGroup || "",
-          gender: parsedFilters.gender || "",
-          startDate: parsedFilters.startDate || "",
-          endDate: parsedFilters.endDate || "",
-        };
-      } catch (error) {
-        console.error("Failed to parse filters from query:", error);
-      }
-    }
-    return {
-      ageGroup: "",
-      gender: "",
-      startDate: "",
-      endDate: "",
-    };
-  };
-
   useEffect(() => {
+    const parseFiltersFromQuery = (): Filters => {
+      const filterParam = searchParams.get("filter");
+      if (filterParam) {
+        try {
+          const parsedFilters: Filters = JSON.parse(
+            decodeURIComponent(filterParam)
+          );
+          return {
+            ageGroup: parsedFilters.ageGroup || "",
+            gender: parsedFilters.gender || "",
+            startDate: parsedFilters.startDate || "",
+            endDate: parsedFilters.endDate || "",
+          };
+        } catch (error) {
+          console.error("Failed to parse filters from query:", error);
+        }
+      }
+      return {
+        ageGroup: "",
+        gender: "",
+        startDate: "",
+        endDate: "",
+      };
+    };
+
     const queryFilters = parseFiltersFromQuery();
 
     if (
