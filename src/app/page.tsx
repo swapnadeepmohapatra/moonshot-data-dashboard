@@ -36,8 +36,18 @@ export default function Home() {
       <Navbar />
       <FilterBar />
       <FeatureBarChart data={barChartData} selectFeature={selectFeature} />
-      <p>Data for {selectedFeature}: </p>
-      <FeatureLineChart data={lineChartData} />
+      {selectedFeature && (
+        <>
+          <p
+            style={{
+              paddingLeft: "1rem",
+            }}
+          >
+            Data for {selectedFeature}:{" "}
+          </p>
+          <FeatureLineChart data={lineChartData} />
+        </>
+      )}
     </main>
   );
 }
